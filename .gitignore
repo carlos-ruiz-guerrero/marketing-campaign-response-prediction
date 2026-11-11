@@ -1,10 +1,17 @@
-.venv/
-.idea/
+# Python
 __pycache__/
-
-data/raw/
-data/processed/
-
-models/
-
 *.pyc
+
+# Virtual environments
+.venv/
+venv/
+
+# PyCharm
+.idea/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+Thumbs.db
