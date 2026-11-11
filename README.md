@@ -82,14 +82,23 @@ The most successful customer profiles were concentrated among customers aged 60\
 4. Implement targeted retention and re\-engagement campaigns for previously contacted customers.
 5. Develop specialized offers tailored to high\-performing customer personas.
 
-## Next Steps
-
-The next phase of the project will evaluate whether these observed relationships are statistically significant and identify the most influential predictors of customer subscription behaviour.
-
 ## Chi-squared 
 
 Statistical significance does not necessarily imply business significance 
 
 Statistical testing confirmed that previous campaign outcome is the strongest predictor of subscription behavior (Cramér's V = 0.470). Age group and occupation contribute modestly to customer conversion, whereas education, marital status, and contact channel show limited practical influence despite statistical significance. 
 
+## Next steps 
+
+# Feature engineering 
+
+Steps where we create:
+
+age_group
+balance_segment
+campaign_group
+contacted_before
+any other derived variables
+
+# Cite
 Moro, S., Rita, P., & Cortez, P. (2014). Bank Marketing [Dataset]. UCI Machine Learning Repository. https://doi.org/10.24432/C5K306. 
