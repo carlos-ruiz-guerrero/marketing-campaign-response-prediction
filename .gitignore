@@ -1,0 +1,10 @@
+.venv/
+.idea/
+__pycache__/
+
+data/raw/
+data/processed/
+
+models/
+
+*.pyc
