@@ -1,4 +1,3 @@
-import sqlite3
 from pathlib import Path
 
 import pandas as pd
@@ -15,43 +14,68 @@ st.set_page_config(
 )
 
 # =====================================================
-# DATABASE CONFIGURATION
+# PATHS
 # =====================================================
 
-PROJECT_ROOT = (
-    Path(__file__)
-    .resolve()
-    .parent
-)
+PROJECT_ROOT = Path(__file__).resolve().parent
 
-DATABASE_PATH = (
+DATASET_PATH = (
     PROJECT_ROOT
     / "data"
-    / "marketing.db"
+    / "processed"
+    / "bank_marketing_clean.csv"
+)
+
+MODEL_PATH = (
+    PROJECT_ROOT
+    / "reports"
+    / "findings"
+    / "model_performance.csv"
+)
+
+AGE_SEGMENT_PATH = (
+    PROJECT_ROOT
+    / "reports"
+    / "findings"
+    / "age_segment_conversion.csv"
+)
+
+BALANCE_SEGMENT_PATH = (
+    PROJECT_ROOT
+    / "reports"
+    / "findings"
+    / "balance_segment_conversion.csv"
+)
+
+CAMPAIGN_PATH = (
+    PROJECT_ROOT
+    / "reports"
+    / "findings"
+    / "campaign_intensity_conversion.csv"
+)
+
+PREVIOUS_CONTACT_PATH = (
+    PROJECT_ROOT
+    / "reports"
+    / "findings"
+    / "previous_contact_conversion.csv"
 )
 
 # =====================================================
-# DATABASE CONNECTION
+# DATA LOADING
 # =====================================================
 
-@st.cache_resource
-def get_connection():
+@st.cache_data
+def load_dataset():
+    return pd.read_csv(DATASET_PATH)
 
-    return sqlite3.connect(
-        str(DATABASE_PATH),
-        check_same_thread=False
-    )
-
-
-conn = get_connection()
+df = load_dataset()
 
 # =====================================================
 # SIDEBAR
 # =====================================================
 
-st.sidebar.title(
-    "Navigation"
-)
+st.sidebar.title("Navigation")
 
 page = st.sidebar.radio(
     "Select page",
@@ -73,14 +97,6 @@ if page == "Executive Summary":
         "📊 Bank Marketing Campaign Analysis"
     )
 
-    df = pd.read_sql(
-        """
-        SELECT *
-        FROM customers
-        """,
-        conn
-    )
-
     total_customers = len(df)
 
     conversion_rate = round(
@@ -90,15 +106,17 @@ if page == "Executive Summary":
 
     col1, col2 = st.columns(2)
 
-    col1.metric(
-        "Customers",
-        f"{total_customers:,}"
-    )
+    with col1:
+        st.metric(
+            "Customers",
+            f"{total_customers:,}"
+        )
 
-    col2.metric(
-        "Conversion Rate",
-        f"{conversion_rate}%"
-    )
+    with col2:
+        st.metric(
+            "Conversion Rate",
+            f"{conversion_rate}%"
+        )
 
     st.markdown("---")
 
@@ -130,16 +148,12 @@ elif page == "Customer Segmentation":
         "👥 Customer Segmentation"
     )
 
-    age_df = pd.read_sql(
-        """
-        SELECT *
-        FROM age_analysis
-        """,
-        conn
+    st.subheader(
+        "Age Segment Conversion"
     )
 
-    st.subheader(
-        "Age Group Conversion"
+    age_df = pd.read_csv(
+        AGE_SEGMENT_PATH
     )
 
     st.dataframe(
@@ -147,16 +161,12 @@ elif page == "Customer Segmentation":
         use_container_width=True
     )
 
-    balance_df = pd.read_sql(
-        """
-        SELECT *
-        FROM balance_analysis
-        """,
-        conn
-    )
-
     st.subheader(
         "Balance Segment Conversion"
+    )
+
+    balance_df = pd.read_csv(
+        BALANCE_SEGMENT_PATH
     )
 
     st.dataframe(
@@ -174,16 +184,12 @@ elif page == "Campaign Performance":
         "📞 Campaign Performance"
     )
 
-    campaign_df = pd.read_sql(
-        """
-        SELECT *
-        FROM campaign_performance
-        """,
-        conn
-    )
-
     st.subheader(
         "Campaign Intensity Analysis"
+    )
+
+    campaign_df = pd.read_csv(
+        CAMPAIGN_PATH
     )
 
     st.dataframe(
@@ -191,20 +197,16 @@ elif page == "Campaign Performance":
         use_container_width=True
     )
 
-    engagement_df = pd.read_sql(
-        """
-        SELECT *
-        FROM engagement_analysis
-        """,
-        conn
-    )
-
     st.subheader(
         "Previous Contact Analysis"
     )
 
+    previous_df = pd.read_csv(
+        PREVIOUS_CONTACT_PATH
+    )
+
     st.dataframe(
-        engagement_df,
+        previous_df,
         use_container_width=True
     )
 
@@ -218,16 +220,8 @@ elif page == "Predictive Modeling":
         "🤖 Predictive Modeling"
     )
 
-    models = pd.read_sql(
-        """
-        SELECT *
-        FROM model_metrics
-        """,
-        conn
-    )
-
-    st.subheader(
-        "Model Performance"
+    models = pd.read_csv(
+        MODEL_PATH
     )
 
     st.dataframe(
