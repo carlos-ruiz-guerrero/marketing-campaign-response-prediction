@@ -1,7 +1,8 @@
 import sqlite3
+from pathlib import Path
+
 import pandas as pd
 import streamlit as st
-import plotly.express as px
 
 # =====================================================
 # PAGE CONFIG
@@ -14,15 +15,12 @@ st.set_page_config(
 )
 
 # =====================================================
-# DATABASE CONNECTION
+# DATABASE CONFIGURATION
 # =====================================================
-
-from pathlib import Path
 
 PROJECT_ROOT = (
     Path(__file__)
     .resolve()
-    .parent
     .parent
 )
 
@@ -32,18 +30,20 @@ DATABASE_PATH = (
     / "marketing.db"
 )
 
+# =====================================================
+# DATABASE CONNECTION
+# =====================================================
+
 @st.cache_resource
 def get_connection():
+
     return sqlite3.connect(
         str(DATABASE_PATH),
         check_same_thread=False
     )
 
-conn = get_connection()
 
-st.write(
-    f"Database: {DATABASE_PATH}"
-)
+conn = get_connection()
 
 # =====================================================
 # SIDEBAR
@@ -110,7 +110,7 @@ if page == "Executive Summary":
         """
         • Customers aged 60+ are the highest-converting segment.
 
-        • Previously contacted customers convert significantly more frequently.
+        • Previously contacted customers convert more frequently.
 
         • Higher account balances improve subscription probability.
 
@@ -119,6 +119,10 @@ if page == "Executive Summary":
         • Predictive models can accurately identify likely subscribers.
         """
     )
+
+# =====================================================
+# CUSTOMER SEGMENTATION
+# =====================================================
 
 elif page == "Customer Segmentation":
 
@@ -134,15 +138,12 @@ elif page == "Customer Segmentation":
         conn
     )
 
-    fig = px.bar(
-        age_df,
-        x="age_group",
-        y="conversion_rate",
-        title="Age Group Conversion Rate"
+    st.subheader(
+        "Age Group Conversion"
     )
 
-    st.plotly_chart(
-        fig,
+    st.dataframe(
+        age_df,
         use_container_width=True
     )
 
@@ -154,17 +155,18 @@ elif page == "Customer Segmentation":
         conn
     )
 
-    fig2 = px.bar(
-        balance_df,
-        x="balance_segment",
-        y="conversion_rate",
-        title="Balance Segment Conversion Rate"
+    st.subheader(
+        "Balance Segment Conversion"
     )
 
-    st.plotly_chart(
-        fig2,
+    st.dataframe(
+        balance_df,
         use_container_width=True
     )
+
+# =====================================================
+# CAMPAIGN PERFORMANCE
+# =====================================================
 
 elif page == "Campaign Performance":
 
@@ -180,15 +182,12 @@ elif page == "Campaign Performance":
         conn
     )
 
-    fig = px.bar(
-        campaign_df,
-        x="campaign_group",
-        y="conversion_rate",
-        title="Campaign Intensity Impact"
+    st.subheader(
+        "Campaign Intensity Analysis"
     )
 
-    st.plotly_chart(
-        fig,
+    st.dataframe(
+        campaign_df,
         use_container_width=True
     )
 
@@ -200,17 +199,18 @@ elif page == "Campaign Performance":
         conn
     )
 
-    fig2 = px.bar(
-        engagement_df,
-        x="contacted_before",
-        y="conversion_rate",
-        title="Previous Contact Impact"
+    st.subheader(
+        "Previous Contact Analysis"
     )
 
-    st.plotly_chart(
-        fig2,
+    st.dataframe(
+        engagement_df,
         use_container_width=True
     )
+
+# =====================================================
+# PREDICTIVE MODELING
+# =====================================================
 
 elif page == "Predictive Modeling":
 
@@ -226,20 +226,12 @@ elif page == "Predictive Modeling":
         conn
     )
 
+    st.subheader(
+        "Model Performance"
+    )
+
     st.dataframe(
         models,
-        use_container_width=True
-    )
-
-    fig = px.bar(
-        models,
-        x="model_name",
-        y="roc_auc",
-        title="Model ROC-AUC Comparison"
-    )
-
-    st.plotly_chart(
-        fig,
         use_container_width=True
     )
 
@@ -254,11 +246,8 @@ elif page == "Predictive Modeling":
 
     st.success(
         f"""
-            Best Model:
-            {best_model['model_name']}
+Best Model: {best_model['model_name']}
 
-            ROC-AUC:
-            {best_model['roc_auc']}
-            """
+ROC-AUC: {best_model['roc_auc']}
+"""
     )
-
