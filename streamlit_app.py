@@ -21,7 +21,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent
 
 DATASET_PATH = (
     PROJECT_ROOT
-    / "data"
+    # / "data"
     / "processed"
     / "bank_marketing_clean.csv"
 )
