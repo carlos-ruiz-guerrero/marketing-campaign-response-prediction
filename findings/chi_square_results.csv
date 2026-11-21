@@ -1,0 +1,7 @@
+Variable,Chi2,P_Value,Degrees_of_Freedom,Cramers_V,Effect_Size,Significant
+poutcome,1822.2,0.0,2,0.47,Strong,True
+age_group,1346.39,2.90349406323866e-290,4,0.173,Weak,True
+job,836.14,3.486711140869683e-173,10,0.136,Weak,True
+education,233.75,1.7481896783696894e-51,2,0.073,Negligible,True
+marital,196.5,2.1450999986791792e-43,2,0.066,Negligible,True
+contact,4.59,0.03209827633501861,1,0.012,Negligible,True
